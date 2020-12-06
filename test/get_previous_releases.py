@@ -191,6 +191,9 @@ def check_host(args) -> int:
 def main(args) -> int:
     Path(args.target_dir).mkdir(exist_ok=True, parents=True)
     print("Releases directory: {}".format(args.target_dir))
+    #return args.tags
+    build_release(args.tags[0] , args)
+    return
     ret = check_host(args)
     if ret:
         return ret
@@ -225,4 +228,5 @@ if __name__ == '__main__':
     parser.add_argument('tags', nargs='+',
                         help="release tags. e.g.: v0.18.1 v0.20.0rc2")
     args = parser.parse_args()
-    sys.exit(main(args))
+    print(main(args))
+    #sys.exit(main(args))
