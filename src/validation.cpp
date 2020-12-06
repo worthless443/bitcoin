@@ -449,7 +449,7 @@ namespace {
 class MemPoolAccept
 {
 public:
-    MemPoolAccept(CTxMemPool& mempool) : m_pool(mempool), m_view(&m_dummy), m_viewmempool(&::ChainstateActive().CoinsTip(), m_pool),
+    explicit MemPoolAccept(CTxMemPool& mempool) : m_pool(mempool), m_view(&m_dummy), m_viewmempool(&::ChainstateActive().CoinsTip(), m_pool),
         m_limit_ancestors(gArgs.GetArg("-limitancestorcount", DEFAULT_ANCESTOR_LIMIT)),
         m_limit_ancestor_size(gArgs.GetArg("-limitancestorsize", DEFAULT_ANCESTOR_SIZE_LIMIT)*1000),
         m_limit_descendants(gArgs.GetArg("-limitdescendantcount", DEFAULT_DESCENDANT_LIMIT)),
@@ -482,7 +482,7 @@ private:
     // All the intermediate state that gets passed between the various levels
     // of checking a given transaction.
     struct Workspace {
-        Workspace(const CTransactionRef& ptx) : m_ptx(ptx), m_hash(ptx->GetHash()) {}
+        explicit Workspace(const CTransactionRef& ptx) : m_ptx(ptx), m_hash(ptx->GetHash()) {}
         std::set<uint256> m_conflicts;
         CTxMemPool::setEntries m_all_conflicting;
         CTxMemPool::setEntries m_ancestors;
@@ -696,7 +696,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         return state.Invalid(TxValidationResult::TX_INPUTS_NOT_STANDARD, "bad-txns-nonstandard-inputs");
     }
 
-    // Check for non-standard witness in P2WSH
+    // Check for non-standard witnesses.
     if (tx.HasWitness() && fRequireStandard && !IsWitnessStandard(tx, m_view))
         return state.Invalid(TxValidationResult::TX_WITNESS_MUTATED, "bad-witness-nonstandard");
 
@@ -5110,7 +5110,9 @@ bool DumpMempool(const CTxMemPool& pool)
         if (!FileCommit(file.Get()))
             throw std::runtime_error("FileCommit failed");
         file.fclose();
-        RenameOver(GetDataDir() / "mempool.dat.new", GetDataDir() / "mempool.dat");
+        if (!RenameOver(GetDataDir() / "mempool.dat.new", GetDataDir() / "mempool.dat")) {
+            throw std::runtime_error("Rename failed");
+        }
         int64_t last = GetTimeMicros();
         LogPrintf("Dumped mempool: %gs to copy, %gs to dump\n", (mid-start)*MICRO, (last-mid)*MICRO);
     } catch (const std::exception& e) {
