@@ -15,7 +15,6 @@ set -u
 
 SCRIPTDIR=$(dirname "${BASH_SOURCE[0]}")
 LINTALL=$(basename "${BASH_SOURCE[0]}")
-
 EXIT_CODE=0
 
 for f in "${SCRIPTDIR}"/lint-*.sh; do
