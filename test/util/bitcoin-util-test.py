@@ -8,7 +8,7 @@
 Runs automatically during `make check`.
 
 Can also be run manually."""
-
+import warnings
 import argparse
 import binascii
 import configparser
@@ -16,15 +16,30 @@ import difflib
 import json
 import logging
 import os
-import pprint
-import subprocess
-import sys
+import pprint 
+import subprocess 
+import sys 
+
+os.environ["logfi"] = "app2.log"
+
+import logger
 
 def main():
+
     config = configparser.ConfigParser()
-    config.optionxform = str
-    config.read_file(open(os.path.join(os.path.dirname(__file__), "../config.ini"), encoding="utf8"))
-    env_conf = dict(config.items('environment'))
+    #config.optionxform = str
+    fn = os.path.join(os.path.dirname(__file__), "config.ini")
+    fn_obj =  makefilecheck(methods.fn)
+    if not fn_obj.name.endswith("ini"):
+        logging.ERROR
+    else:
+        logging.DEBUG 
+    if fn_obj.mode == "r":
+        logging.log(1, fn_obj.read() )
+    config.read_file(fn_obj) 
+    env_conf = dict(config.items())
+    #env_conf = dict(config.items('environment'))
+
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-v', '--verbose', action='store_true')
@@ -39,16 +54,43 @@ def main():
     # Add the format/level to the logger
     logging.basicConfig(format=formatter, level=level)
 
-    bctester(os.path.join(env_conf["SRCDIR"], "test", "util", "data"), "bitcoin-util-test.json", env_conf)
+    #bctester(os.path.join(env_conf["SRCDIR"], "test", "util", "data"), "bitcoin-util-test.json", env_conf)
+    jo = env_conf[list(env_conf.keys())[0]]
+
+        
+    bctester(("default", "test", "util", "data"), "bitcoin-util-test.json", env_conf)
+
+def makefilecheck(fn):
+    if os.path.exists(fn):
+        fn_obj = open(fn, 'r')
+        if len(fn_obj.read().split()) < 1:
+            warnings.warn("empty file!") 
+    else:
+        fn_obj = open(fn, 'w')
+
+    return fn_obj
+
+class methods:
+    fn = [f for f in os.listdir(".") if f.endswith("ini")]
+    fn = os.path.join(os.path.dirname(os.path.curdir), fn[0])
+    main_path_io = open(fn)
+
+def optPath(tup):
+    x,y,z,f = tup 
+    for a in tup:
+        if not os.path.exists(a):
+            x = open(a, "w")
+                
+    return x,y,z,f 
 
 def bctester(testDir, input_basename, buildenv):
     """ Loads and parses the input file, runs all tests and reports results"""
-    input_filename = os.path.join(testDir, input_basename)
+    f1,f2,f3,f4 = optPath(testDir )
+    input_filename = os.path.join(f4, input_basename)
+    logging.warning("fuck")
     raw_data = open(input_filename, encoding="utf8").read()
     input_data = json.loads(raw_data)
-
-    failed_testcases = []
-
+    failed_testcases = [] 
     for testObj in input_data:
         try:
             bctest(testDir, testObj, buildenv)
