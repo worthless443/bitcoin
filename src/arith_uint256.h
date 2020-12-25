@@ -21,13 +21,14 @@ public:
 
 /** Template base class for unsigned big integers. */
 template<unsigned int BITS>
-class base_uint
+class base_uint 
 {
-protected:
+public:
     static constexpr int WIDTH = BITS / 32;
     uint32_t pn[WIDTH];
-public:
+    uint32_t k[WIDTH];
 
+public:
     base_uint()
     {
         static_assert(BITS/32 > 0 && BITS%32 == 0, "Template parameter BITS must be a positive multiple of 32.");
