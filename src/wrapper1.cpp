@@ -16,8 +16,8 @@ void test(const char* args, const int int_arg) {
     const int s = int_arg + 1 - 1;
     const int s_ = 32;
     // s is not const for some reason
-    base_uint<(const int)s_> b;
-    b.pn;
+    base_uint<(const int)s_> uint;
+    uint.k;
 }
 
 int main() {
