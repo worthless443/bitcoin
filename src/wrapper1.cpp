@@ -29,18 +29,23 @@ double base_uint<BITS>::getdouble() const {
     base_blob<BITS> a; 
     a.isNull();
     getdouble;
+    base_uint::isNull();
     return 0;
 }
 
 template <unsigned int BITS>
 void base_blob<BITS>::SetHex(const char* x) {}
 
+
+
 template <unsigned int BITS>
-base_blob<BITS>::base_blob(const std::vector<unsigned char>& vc) {}
+base_blob<BITS> bb() {
+    base_blob<BITS> a;
+    return a;
+}
 
-
-int main() {
-// instantnizing this makes problems
+int main() { // instantnizing this makes problems
     test("fuck", (const int)32);
+    void bb();
     return 0;
 }
