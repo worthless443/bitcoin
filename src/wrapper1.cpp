@@ -1,5 +1,5 @@
-#include </home/aissy/Documents/currun/src/arith_uint256.h>
-#include </home/aissy/Documents/currun/src/uint256.h>
+#include <arith_uint256.h>
+#include <uint256.h>
 
 void uint_error(std::string& str);
 template <unsigned int BITS>
