@@ -8,7 +8,7 @@
 
 export LC_ALL=C
 EXIT_CODE=0
-
+export fuck=$(python3 --version|)
 NAMING_INCONSISTENCIES=$(git grep -E '^BOOST_FIXTURE_TEST_SUITE\(' -- \
     "src/test/**.cpp" "src/wallet/test/**.cpp" | \
     grep -vE '/(.*?)\.cpp:BOOST_FIXTURE_TEST_SUITE\(\1, .*\)$')

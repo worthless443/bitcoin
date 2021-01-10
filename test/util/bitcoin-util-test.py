@@ -34,12 +34,14 @@ def main():
         logging.ERROR
     else:
         logging.DEBUG 
+    
     if fn_obj.mode == "r":
         logging.log(1, fn_obj.read() )
     config.read_file(fn_obj) 
+    writeConfig(config, fn_obj.name)
     env_conf = dict(config.items())
     #env_conf = dict(config.items('environment'))
-
+    idx=  list(env_conf.keys())[0]
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-v', '--verbose', action='store_true')
@@ -56,9 +58,19 @@ def main():
 
     #bctester(os.path.join(env_conf["SRCDIR"], "test", "util", "data"), "bitcoin-util-test.json", env_conf)
     jo = env_conf[list(env_conf.keys())[0]]
-
+    
+    return idx, jo
         
-    bctester(("default", "test", "util", "data"), "bitcoin-util-test.json", env_conf)
+    bctester((idx, "test", "util", "data"), "bitcoin-util-test.json", env_conf)
+
+
+def writeConfig(config, fn):
+
+    for i, (k, v) in enumerate(config.items()):
+        v = {i:v}
+        config[k] = v
+    with open(fn , "w") as w:
+        config.write(w)
 
 def makefilecheck(fn):
     if os.path.exists(fn):
@@ -214,4 +226,4 @@ def parse_output(a, fmt):
         raise NotImplementedError("Don't know how to compare %s" % fmt)
 
 if __name__ == '__main__':
-    main()
+   print(main())
