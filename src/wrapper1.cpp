@@ -46,6 +46,6 @@ base_blob<BITS> bb() {
 
 int main() { // instantnizing this makes problems
     test("fuck", (const int)32);
-    void bb();
+    bb();
     return 0;
 }
