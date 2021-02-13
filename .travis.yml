@@ -24,4 +24,5 @@ script:
       
 after_script:
     echo installed with $?
+    echo done
 
