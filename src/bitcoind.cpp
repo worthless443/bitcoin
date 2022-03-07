@@ -22,6 +22,7 @@
 #include <util/threadnames.h>
 #include <util/translation.h>
 #include <util/url.h>
+#include <bitcoin-config.h>
 
 #include <functional>
 
@@ -36,6 +37,33 @@ static void WaitForShutdown(NodeContext& node)
     }
     Interrupt(node);
 }
+//#### LEARNING ZONE #####
+template<typename T> //100% certain SegFault will occur 
+T *padding_stirng(std::string str, int s) {
+	const int size_ = (const int)str.size();
+	std::array<T, 0> *arr; 
+	if(str.size()<s) arr.N = 100;
+	else return NULL;
+	for(int i=0;i<s;i++) arr[i] = std::string(2);
+	for(int i=0;i<str.size();i++) arr[i] = str.at( i );
+	//str.begin()
+	return arr;
+}
+template<int i> constexpr int getValue() {return i;}
+
+template<typename T> //10% certain SegFault will occur 
+void padding_stirng_array(int &s) {
+	constexpr const int x;;//{&s};// = (const int*)&s;
+	switch(s) {
+	case(10): x =1;
+	case(100): x=100;
+	}
+	constexpr const int val =  getValue<100>();
+	std::array<T, val> arr;
+	arr.N =  x;
+}
+// passed :)
+//#### LEARNING ZONE #####
 
 static bool AppInit(int argc, char* argv[])
 {
@@ -55,12 +83,12 @@ static bool AppInit(int argc, char* argv[])
 
     // Process help and version before taking care about datadir
     if (HelpRequested(args) || args.IsArgSet("-version")) {
-        std::string strUsage = PACKAGE_NAME " version " + FormatFullVersion() + "\n";
+        std::string strUsage = PACKAGE_NAME + std::string(" version ") + FormatFullVersion() + "\n";
 
         if (args.IsArgSet("-version")) {
             strUsage += FormatParagraph(LicenseInfo()) + "\n";
         } else {
-            strUsage += "\nUsage:  bitcoind [options]                     Start " PACKAGE_NAME "\n";
+            strUsage += "\nUsage:  bitcoind [options]                     Start " + std::string{PACKAGE_NAME} + "\n";
             strUsage += "\n" + args.GetHelpMessage();
         }
 
